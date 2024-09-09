@@ -102,8 +102,8 @@
 
             while ($row = $result->fetch_assoc()) {
               echo "<li class=\"list-group-item\">
-                            <input type=\"checkbox\" name=\"state\" id=\"state\" style=\"float: right; padding-top: 10px; height: 20px; width: 20px; margin-top: 5px; margin-bottom: 5; margin-bottom: 5px;\">{$row['nome']}</input>  
-                          </li>";
+                      <input type=\"checkbox\" name=\"state\" id=\"state\" style=\"float: right; padding-top: 10px; height: 20px; width: 20px; margin-top: 5px; margin-bottom: 5; margin-bottom: 5px;\">{$row['nome']}</input>  
+                    </li>";
             }
             ?>
           </ul>
@@ -111,12 +111,6 @@
       </div>
     </div>
   </div>
-  <script>
-    function setListStatus(element) {
-      element.class += " active"; 
-    }
-
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
