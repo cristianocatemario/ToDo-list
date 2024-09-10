@@ -96,15 +96,19 @@
         <div class="container text-left">
           <ul class="list-group">
             <?php
-            $sql = "SELECT nome FROM tasks";
-            $result = $conn->query($sql);
-            $liste = $result;
-
-            while ($row = $result->fetch_assoc()) {
-              echo "<li class=\"list-group-item\">
-                      <input type=\"checkbox\" name=\"state\" id=\"state\" style=\"float: right; padding-top: 10px; height: 20px; width: 20px; margin-top: 5px; margin-bottom: 5; margin-bottom: 5px;\">{$row['nome']}</input>  
-                    </li>";
-            }
+              $sql = "SELECT nome FROM tasks";
+              $result = $conn->query($sql);
+              $tasks = $result;
+              
+              $id_list = 0; //prendere l'id della lista selezionata
+              $sql_list_id = "SELECT DISTINCT tasks.nome FROM tasks, lista WHERE tasks.idLista =".$id_list.";"; 
+              
+              //? MODIFICARE
+              while ($row = $result->fetch_assoc()) { //show tasks
+                echo "<li class=\"list-group-item\">
+                        <input type=\"checkbox\" name=\"state\" id=\"state\" style=\"float: right; padding-top: 10px; height: 20px; width: 20px; margin-top: 5px; margin-bottom: 5; margin-bottom: 5px;\">{$row['nome']}</input>  
+                      </li>";
+              }
             ?>
           </ul>
         </div>
