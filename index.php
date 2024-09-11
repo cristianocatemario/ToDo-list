@@ -11,18 +11,17 @@
 <body class="bg-dark">
   <div class="container text-light" style="margin-top: 2%; height: 11%;">
     <?php
-    $host = "localhost";
-    $username = "cate";
-    $password = "admin";
-    $db_nome = "todo";
+      $host = "localhost";
+      $username = "cate";
+      $password = "admin";
+      $db_nome = "todo";
 
-    $conn = new mysqli($host, $username, $password, $db_nome);
+      $conn = new mysqli($host, $username, $password, $db_nome);
 
-    if ($conn->connect_errno) {
-      echo "Impossibile connettersi al server: " . $conn->connect_error . "\n";
-      exit;
-    }
-
+      if ($conn->connect_errno) {
+        echo "Impossibile connettersi al server: " . $conn->connect_error . "\n";
+        exit;
+      }
     ?>
 
     <div class="row">
@@ -31,20 +30,17 @@
 
       <div class="col-3 bg-warning" style="padding-bottom: 15px;">
         <h1 class="text-center text-dark">Lists</h1>
-        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-          <ul class="list-group">
-            <?php
-              $sql = "SELECT nome FROM lista";
-              $result = $conn->query($sql);
-              $liste = $result;
-            ?>
-            
+          <ul class="list-group"name="list">
             <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">              
               <?php
+                $sql = "SELECT nome, id FROM lista";
+                $result = $conn->query($sql);
+                $lists = $result;
+                
                 $list_class = "\"list-group-item list-group-item-action\"";
 
-                while ($row = $result->fetch_assoc()) { //mostra il nome delle liste nel db 
-                  echo "<button type=\"button\" name=\"list_name\"= class={$list_class} data-bs-toggle=\"list\">{$row['nome']}</button>";
+                while ($lists = $result->fetch_assoc()) { //mostra il nome delle liste nel db 
+                  echo "<input type=\"button\" name=\"list_name\" id=\"listName\" class={$list_class} data-bs-toggle=\"list\" value=\"{$lists['nome']}\"></input>";
                 }
               ?>
             </form>
@@ -65,7 +61,7 @@
                   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <p style="text-align:center;">Insert data for the creation of a new To-Do list</p>
                     <label for="list_name" class="form-label">List name</label>
-                    <input type="text" class="form-control" id="InputEmail" required>
+                    <input type="text" class="form-control" id="InputListName" required>
                     
                     <label for="task_name" class="form-label">Tasks</label>
                     <input type="text" class="form-control" id="inputTaskName">
@@ -87,8 +83,6 @@
               </div>
             </div>
           </div>
-
-        </form>
       </div>
 
       <div class="col-6 bg-black">
@@ -96,19 +90,17 @@
         <div class="container text-left">
           <ul class="list-group">
             <?php
-              if (isset($_POST['list_name'])) {
-                $sql_list_id = "SELECT DISTINCT tasks.nome FROM tasks, lista WHERE tasks.idLista = lista.id";
-                $result = $conn->query($sql);
-                $tasks = $result;              
-                
-                //? MODIFICARE
-                while ($row = $result->fetch_assoc()) { //show tasks
+              $sql = "SELECT nome, idLista FROM tasks WHERE tasks.idLista = 1";
+              $result = $conn->query($sql);
+              $tasks = $result ;              
+              
+              while ($tasks = $result->fetch_assoc()) { //show tasks
+                if ($tasks['idLista'] == 1){ //1 = idListaSelezionata, modificare prendendo l'id della lista con le task da visualizzare
                   echo "<li class=\"list-group-item\">
-                          <input type=\"checkbox\" name=\"state\" id=\"state\" style=\"float: right; padding-top: 10px; height: 20px; width: 20px; margin-top: 5px; margin-bottom: 5; margin-bottom: 5px;\">{$row['nome']}</input>  
+                          <input type=\"checkbox\" name=\"state\" id=\"state\" style=\"float: right; padding-top: 10px; height: 20px; width: 20px; margin: 5px 5px;\">{$tasks['nome']}</input>  
                         </li>";
                 }
               }
-
             ?>
           </ul>
         </div>
