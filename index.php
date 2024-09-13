@@ -62,9 +62,11 @@
                     <p style="text-align:center;">Insert data for the creation of a new To-Do list</p>
                     <label for="list_name" class="form-label">List name</label>
                     <input type="text" class="form-control" id="InputListName" required>
-                    
                     <label for="task_name" class="form-label">Tasks</label>
-                    <input type="text" class="form-control" id="inputTaskName">
+
+                    <div id="taskcontainer">
+                      <input type="text" class="form-control" id="inputTaskName">
+                    </div>
                     
                     <input type="submit" name="addTask" class="btn btn-primary" value="+ Add Task" style="margin-top: 2%;" onclick="addTask()"></input>
                   </form>
