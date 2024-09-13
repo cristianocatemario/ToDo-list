@@ -66,7 +66,7 @@
                     <label for="task_name" class="form-label">Tasks</label>
                     <input type="text" class="form-control" id="inputTaskName">
                     
-                    <input type="submit" name="addTask" class="btn btn-primary" value="+ Add Task" style="margin-top: 2%;"></input>
+                    <input type="submit" name="addTask" class="btn btn-primary" value="+ Add Task" style="margin-top: 2%;" onclick="addTask()"></input>
                   </form>
 
                   <?php
@@ -107,6 +107,22 @@
       </div>
     </div>
   </div>
+  <script>
+    function addTask() {
+      // Trova il contenitore delle task
+      const taskContainer = document.getElementById('taskContainer');
+
+      // Crea un nuovo campo input per una task aggiuntiva
+      const newTask = document.createElement('input');
+      newTask.setAttribute('type', 'text');
+      newTask.setAttribute('class', 'form-control');
+      newTask.setAttribute('id', 'inputTaskName');
+      newTask.setAttribute('style', 'margin-top: 2%');
+      
+      // Aggiunge il nuovo campo di input al contenitore
+      taskContainer.appendChild(newTask);
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
