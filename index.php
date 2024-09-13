@@ -12,7 +12,7 @@
   <div class="container text-light" style="margin-top: 2%; height: 11%;">
     <?php
       $host = "localhost";
-      $username = "cate";
+      $username = "root";     //?remember to change to 'cate'
       $password = "admin";
       $db_nome = "todo";
 
@@ -33,7 +33,7 @@
           <ul class="list-group"name="list">
             <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">              
               <?php
-                $sql = "SELECT nome, id FROM lista";
+                $sql = "SELECT nome, id FROM list";
                 $result = $conn->query($sql);
                 $lists = $result;
                 
@@ -61,26 +61,34 @@
                   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <p style="text-align:center;">Insert data for the creation of a new To-Do list</p>
                     <label for="list_name" class="form-label">List name</label>
-                    <input type="text" class="form-control" id="InputListName" required>
+                    <input type="text" class="form-control" id="InputListName" name="InputListName" required>
                     <label for="task_name" class="form-label">Tasks</label>
 
-                    <div id="taskcontainer">
+                    <div id="taskNamesContainer">
                       <input type="text" class="form-control" id="inputTaskName">
                     </div>
                     
-                    <input type="submit" name="addTask" class="btn btn-primary" value="+ Add Task" style="margin-top: 2%;" onclick="addTask()"></input>
+                    
+                    <!-- <?php
+                    // if(isset($_POST["addTask"])){
+                      //   echo "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\">";
+                      // }
+                      ?> -->
                   </form>
-
-                  <?php
-                    if(isset($_POST["addTask"])){
-                      echo "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\">";
-                    }
-                  ?>
-
                 </div>
                 
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary">Create list</button>
+                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                    <button type="button" name="addTask" class="btn btn-secondary" value="Add Task" onclick="addTask()">Add Task</button>
+                    <input type="submit" name="createList" class="btn btn-success" value="Create list"></input>
+                  </form>
+                  <?php
+                      if(isset($_POST['createList'])) {
+                        $list_name = $_POST['inputListName'];
+                        $sql_create_list = "INSERT INTO list (nome, stato) VALUES ('$list_name', 'non completata')";
+                        $lists = $conn->query($sql);
+                      }
+                    ?>
                 </div>
               </div>
             </div>
@@ -108,23 +116,23 @@
         </div>
       </div>
     </div>
-  </div>
   <script>
     function addTask() {
-      // Trova il contenitore delle task
-      const taskContainer = document.getElementById('taskContainer');
+      var taskNamesContainer = document.getElementById('taskNamesContainer');
+      var docstyle = taskNamesContainer.style.display;
 
-      // Crea un nuovo campo input per una task aggiuntiva
-      const newTask = document.createElement('input');
-      newTask.setAttribute('type', 'text');
-      newTask.setAttribute('class', 'form-control');
-      newTask.setAttribute('id', 'inputTaskName');
-      newTask.setAttribute('style', 'margin-top: 2%');
+      if (docstyle == 'none') 
+        taskNamesContainer.style.display = '';
       
-      // Aggiunge il nuovo campo di input al contenitore
-      taskContainer.appendChild(newTask);
+      addid++;
+
+      var text = document.createElement('div');
+      text.id = 'task_' + addid;
+      text.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\" onclick='addInput(" + addid + ")' id='addlink_" + addid + "'>";
+      taskNamesContainer.appendChild(text);
     }
   </script>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
