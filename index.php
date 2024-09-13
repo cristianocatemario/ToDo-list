@@ -61,19 +61,12 @@
                   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <p style="text-align:center;">Insert data for the creation of a new To-Do list</p>
                     <label for="list_name" class="form-label">List name</label>
-                    <input type="text" class="form-control" id="InputListName" name="InputListName" required>
+                    <input type="text" class="form-control" id="inputListName" name="inputListName" required>
                     <label for="task_name" class="form-label">Tasks</label>
 
                     <div id="taskNamesContainer">
                       <input type="text" class="form-control" id="inputTaskName">
                     </div>
-                    
-                    
-                    <!-- <?php
-                    // if(isset($_POST["addTask"])){
-                      //   echo "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\">";
-                      // }
-                      ?> -->
                   </form>
                 </div>
                 
@@ -82,17 +75,19 @@
                     <button type="button" name="addTask" class="btn btn-secondary" value="Add Task" onclick="addTask()">Add Task</button>
                     <input type="submit" name="createList" class="btn btn-success" value="Create list"></input>
                   </form>
-                  <?php
-                      if(isset($_POST['createList'])) {
-                        $list_name = $_POST['inputListName'];
-                        $sql_create_list = "INSERT INTO list (nome, stato) VALUES ('$list_name', 'non completata')";
-                        $lists = $conn->query($sql);
-                      }
-                    ?>
                 </div>
               </div>
             </div>
           </div>
+
+          <?php
+            if(isset($_POST['createList'])) {
+              $list_name = $_POST['inputListName'];
+
+              $sql_create_list = "INSERT INTO list (nome, stato) VALUES ('$list_name', 'non completata')";
+              $lists = $conn->query($sql_create_list);
+            }
+          ?>
       </div>
 
       <div class="col-6 bg-black">
