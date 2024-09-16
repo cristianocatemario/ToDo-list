@@ -10,9 +10,10 @@
 
 <body class="bg-dark">
   <div class="container text-light" style="margin-top: 2%; height: 11%;">
-    <?php
+    <?php 
+      //db connection
       $host = "localhost";
-      $username = "root";     //?remember to change to 'cate'
+      $username = "root";     //? 'cate'
       $password = "admin";
       $db_nome = "todo";
 
@@ -23,6 +24,10 @@
         exit;
       }
     ?>
+
+    <script>
+      var addid=0;
+    </script>
 
     <div class="row">
       <div class="col-2">
@@ -58,7 +63,7 @@
                 </div>
 
                 <div class="modal-body">
-                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                  <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                     <p style="text-align:center;">Insert data for the creation of a new To-Do list</p>
                     <label for="list_name" class="form-label">List name</label>
                     <input type="text" class="form-control" id="inputListName" name="inputListName" required>
@@ -71,23 +76,41 @@
                 </div>
                 
                 <div class="modal-footer">
-                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                    <button type="button" name="addTask" class="btn btn-secondary" value="Add Task" onclick="addTask()">Add Task</button>
+                  <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+                    <input type="button" name="addTaskButton" class="btn btn-secondary" value="Add Task" onclick="addTask()"></input>
                     <input type="submit" name="createList" class="btn btn-success" value="Create list"></input>
+                    
+                    <script>
+                      function addTask() {
+                        var taskNamesContainer = document.getElementById('taskNamesContainer');
+                        var docstyle = taskNamesContainer.style.display;
+
+                        if (docstyle == 'none') 
+                          taskNamesContainer.style.display = '';
+                        
+                        addid++;
+
+                        var text = document.createElement('div');
+                        text.id = 'task_' + addid;
+                        text.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\" style=\"margin-top:2%;\" onclick='addInput(" + addid + ")' id='addlink_" + addid + "'>";
+                        taskNamesContainer.appendChild(text);
+                      }
+                    </script>
                   </form>
+                  <?php
+                    if(isset($_POST['createList'])) {
+                      $list_name = $_POST['inputListName'];
+                      $task_name = $_POST['inputListName'];
+
+                      $sql_create_list = "INSERT INTO list (nome, stato) VALUES ('$list_name', 'non completata')";
+                      $sql_create_task = "INSERT INTO tasks (nome, idLista) VALUES ('$task_name', 'non completata')";
+                      $lists = $conn->query($sql_create_list);
+                    }
+                  ?>
                 </div>
               </div>
             </div>
           </div>
-
-          <?php
-            if(isset($_POST['createList'])) {
-              $list_name = $_POST['inputListName'];
-
-              $sql_create_list = "INSERT INTO list (nome, stato) VALUES ('$list_name', 'non completata')";
-              $lists = $conn->query($sql_create_list);
-            }
-          ?>
       </div>
 
       <div class="col-6 bg-black">
@@ -95,38 +118,23 @@
         <div class="container text-left">
           <ul class="list-group">
             <?php
-              $sql = "SELECT nome, idLista FROM tasks WHERE tasks.idLista = 1";
+              // $sql = "SELECT nome, idLista FROM tasks WHERE tasks.idLista = 1";
+              $sql = "SELECT nome, idLista FROM tasks";
               $result = $conn->query($sql);
               $tasks = $result ;              
               
               while ($tasks = $result->fetch_assoc()) { //show tasks
-                if ($tasks['idLista'] == 1){ //1 = idListaSelezionata, modificare prendendo l'id della lista con le task da visualizzare
+                //if ($tasks['idLista'] == 1){ //1 = idListaSelezionata, modificare prendendo l'id della lista con le task da visualizzare
                   echo "<li class=\"list-group-item\">
                           <input type=\"checkbox\" name=\"state\" id=\"state\" style=\"float: right; padding-top: 10px; height: 20px; width: 20px; margin: 5px 5px;\">{$tasks['nome']}</input>  
                         </li>";
-                }
+                //}
               }
             ?>
           </ul>
         </div>
       </div>
     </div>
-  <script>
-    function addTask() {
-      var taskNamesContainer = document.getElementById('taskNamesContainer');
-      var docstyle = taskNamesContainer.style.display;
-
-      if (docstyle == 'none') 
-        taskNamesContainer.style.display = '';
-      
-      addid++;
-
-      var text = document.createElement('div');
-      text.id = 'task_' + addid;
-      text.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\" onclick='addInput(" + addid + ")' id='addlink_" + addid + "'>";
-      taskNamesContainer.appendChild(text);
-    }
-  </script>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
