@@ -23,34 +23,37 @@
         echo "Impossibile connettersi al server: " . $conn->connect_error . "\n";
         exit;
       }
-    ?>
+      ?>
+
 
     <script>
       var addid=0;
     </script>
 
-    <div class="row">
+      
+
+<div class="row">
       <div class="col-2">
       </div>
 
-      <div class="col-3 bg-warning" style="padding-bottom: 15px;">
+      <div class="col-3 bg-warning rounded-3" style="padding-bottom: 15px; margin-right:2%">
         <h1 class="text-center text-dark">Lists</h1>
-          <ul class="list-group"name="list">
-            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">              
-              <?php
+        <ul class="list-group"name="list">
+          <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">              
+            <?php
                 $sql = "SELECT nome, id FROM list";
                 $result = $conn->query($sql);
                 $lists = $result;
                 
                 $list_class = "\"list-group-item list-group-item-action\"";
-
+                
                 while ($lists = $result->fetch_assoc()) { //mostra il nome delle liste nel db 
-                  echo "<input type=\"button\" name=\"list_name\" id=\"listName\" class={$list_class} data-bs-toggle=\"list\" value=\"{$lists['nome']}\"></input>";
+                  echo "<input type=\"button\" name=\"{$lists['nome']}\" id=\"{$lists['nome']}\" class={$list_class} data-bs-toggle=\"list\" value=\"{$lists['nome']}\"></input>";
                 }
-              ?>
+            ?>
             </form>
           </ul>
-
+          
           <button type="button" class="btn bg-black text-light" data-bs-toggle="modal" data-bs-target="#modalCreateList" style="margin-top: 10px; float: center" name="create_list">Create new list</button>
           
           <!-- Modal -->
@@ -61,14 +64,14 @@
                   <h1 class="modal-title fs-3" id="exampleModalLabel">Create new list</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
+                
                 <div class="modal-body">
                   <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                     <p style="text-align:center;">Insert data for the creation of a new To-Do list</p>
                     <label for="list_name" class="form-label">List name</label>
                     <input type="text" class="form-control" id="inputListName" name="inputListName" required>
                     <label for="task_name" class="form-label">Tasks</label>
-
+                    
                     <div id="taskNamesContainer">
                       <input type="text" class="form-control" id="inputTaskName">
                     </div>
@@ -84,27 +87,30 @@
                       function addTask() {
                         var taskNamesContainer = document.getElementById('taskNamesContainer');
                         var docstyle = taskNamesContainer.style.display;
-
-                        if (docstyle == 'none') 
-                          taskNamesContainer.style.display = '';
                         
-                        addid++;
-
-                        var text = document.createElement('div');
-                        text.id = 'task_' + addid;
-                        text.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\" style=\"margin-top:2%;\" onclick='addInput(" + addid + ")' id='addlink_" + addid + "'>";
-                        taskNamesContainer.appendChild(text);
+                        if (docstyle == 'none') 
+                        taskNamesContainer.style.display = '';
+                      
+                      addid++;
+                      
+                      var text = document.createElement('div');
+                      text.id = 'task_' + addid;
+                      text.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"inputTaskName\" style=\"margin-top:2%;\" onclick='addInput(" + addid + ")' id='addlink_" + addid + "'>";
+                      taskNamesContainer.appendChild(text);
                       }
                     </script>
                   </form>
                   <?php
                     if(isset($_POST['createList'])) {
                       $list_name = $_POST['inputListName'];
-                      $task_name = $_POST['inputListName'];
-
+                      
                       $sql_create_list = "INSERT INTO list (nome, stato) VALUES ('$list_name', 'non completata')";
                       $sql_create_task = "INSERT INTO tasks (nome, idLista) VALUES ('$task_name', 'non completata')";
+
                       $lists = $conn->query($sql_create_list);
+                      $tasksToAdd = $conn->query($sql_create_task);
+
+
                     }
                   ?>
                 </div>
@@ -113,12 +119,17 @@
           </div>
       </div>
 
-      <div class="col-6 bg-black">
+      <div class="col-6 bg-black rounded">
         <h1 class="text-center">Tasks</h1>
         <div class="container text-left">
           <ul class="list-group">
             <?php
+              //? query per prendere solo le task della lista selezionata
+              //TODO: SELECT t.nome FROM list l, tasks t WHERE l.id=$idlistaSelezionata AND l.id=t.idlista; 
+                    
               // $sql = "SELECT nome, idLista FROM tasks WHERE tasks.idLista = 1";
+              $idListaSelezionata = "SELECT l.id FROM list l WHERE l.nome = 'ElementoDellaListaSelezionato'"; //TODO: edit
+
               $sql = "SELECT nome, idLista FROM tasks";
               $result = $conn->query($sql);
               $tasks = $result ;              
